@@ -2,32 +2,88 @@ package com.pinyougou.manager.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.pojo.Brand;
-import com.pinyougou.sellergoods.service.BrandService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 
-/**
- * @program: pinyougou
- * @description:
- * @author: Mr.Chen
- * @create: 2018-07-25 10:20
- **/
-@RestController
-public class BrandController {
-    /**
-     * 引用服务接口代理对象
-     * timeout: 调用服务接口方法超时时间毫秒数
-     */
-    @Reference(timeout = 10000)
-    private BrandService brandService;
+import com.pinyougou.sellergoods.service.BrandService;
+import org.springframework.web.bind.annotation.*;
+import pojo.PageResult;
 
-    /** 查询全部品牌 */
-    @GetMapping("/brand/findAll")
-    public List<Brand> findAll(){
-        return brandService.findAll();
-    }
+/**
+ * BrandController 控制器类
+ * @author LEE.SIU.WAH
+ * @date 2018-07-26 23:20:59
+ * @version 1.0
+ */
+@RestController
+@RequestMapping("/brand")
+public class BrandController {
+
+	@Reference(timeout = 10000)
+	private BrandService brandService;
+	/** 查询全部的品牌 */
+	@GetMapping("/findAll")
+	public List<Brand> findAll(){
+		return brandService.findAll();
+	}
+	/** 多条件分页查询方法 */
+	@GetMapping("/findByPage")
+	public PageResult save(Brand brand,
+			@RequestParam(value="page")Integer page,
+			@RequestParam(value="rows")Integer rows) {
+		try {
+			PageResult pageResult = brandService.findByPage(brand, page, rows);
+			return pageResult;
+		}catch (Exception ex){
+			ex.printStackTrace();
+		}
+		return null;
+	}
+
+	/** 根据主键id查询方法 */
+	@GetMapping("/findOne")
+	public Brand findOne(Long id) {
+		try {
+			return brandService.findOne(id);
+		}catch (Exception ex){
+			ex.printStackTrace();
+		}
+		return null;
+	}
+
+	/** 添加方法 */
+	@PostMapping("/save")
+	public boolean save(@RequestBody Brand brand) {
+		try {
+			brandService.save(brand);
+			return true;
+		}catch (Exception ex){
+			ex.printStackTrace();
+		}
+		return false;
+	}
+
+	/** 修改方法 */
+	@PostMapping("/update")
+	public boolean update(@RequestBody Brand brand) {
+		try {
+			brandService.update(brand);
+			return true;
+		}catch (Exception ex){
+			ex.printStackTrace();
+		}
+		return false;
+	}
+
+	/** 删除方法 */
+	@GetMapping("/delete")
+	public boolean delete(Long[] ids) {
+		try {
+			brandService.deleteAll(ids);
+			return true;
+		}catch (Exception ex){
+			ex.printStackTrace();
+		}
+		return false;
+	}
 
 }
