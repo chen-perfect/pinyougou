@@ -1,11 +1,16 @@
 package com.pinyougou.manager.controller;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.pojo.Seller;
+
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import com.pinyougou.sellergoods.service.SellerService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import pojo.PageResult;
+
 /**
  * SellerController 控制器类
  * @author LEE.SIU.WAH
@@ -17,17 +22,25 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/seller")
 public class SellerController {
 
-	@Autowired(required = false)
+	@Reference(timeout = 10000)
 	private SellerService sellerService;
 
 	/** 多条件分页查询方法 */
 	@GetMapping("/findByPage")
-	public List<Seller> save(Seller seller,
-			@RequestParam(value="page", defaultValue="1")Integer page,
-			@RequestParam(value="rows", defaultValue="10")Integer rows) {
+	public PageResult save(Seller seller,
+						   @RequestParam(value="page")Integer page,
+						   @RequestParam(value="rows")Integer rows) throws UnsupportedEncodingException {
+		/** GET请求中文转码 */
+		if (seller != null && StringUtils.isNoneBlank(seller.getName())){
+			seller.setName(new String(seller.getName()
+					.getBytes("ISO8859-1"),"UTF-8"));
+		}
+		if (seller != null && StringUtils.isNoneBlank(seller.getNickName())){
+			seller.setNickName(new String(seller.getNickName()
+					.getBytes("ISO8859-1"),"UTF-8"));
+		}
 		try {
-			List<Seller> sellerList = sellerService.findByPage(seller, page, rows);
-			return sellerList;
+			return sellerService.findByPage(seller, page, rows);
 		}catch (Exception ex){
 			ex.printStackTrace();
 		}
@@ -80,5 +93,19 @@ public class SellerController {
 		}
 		return false;
 	}
+	/**
+	 * 修改商家状态
+	 */
+	@GetMapping("/updateStatus")
+	public boolean updateStatus(String sellerId, String status){
+		try {
+			sellerService.updateStatus(sellerId, status);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 
 }

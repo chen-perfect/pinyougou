@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!--######### 配置请求URL拦截规则 ##########-->
+    <!-- 配置哪些请求URL不需要拦截 -->
+    <security:http pattern="/login.html" security="none"/>
+    <security:http pattern="/css/**" security="none"/>
+    <security:http pattern="/img/**" security="none"/>
+    <security:http pattern="/js/**" security="none"/>
+    <security:http pattern="/plugins/**" security="none"/>
+
+    <!-- use-expressions: 是否用SpEL表达式 false:不用 true:用 -->
+    <security:http use-expressions="false">
+        <!-- 配置哪些请求URL需要用什么角色权限才能访问 -->
+        <security:intercept-url pattern="/**" access="ROLE_ADMIN"/>
+        <!-- 配置开启表单登录
+            login-page: 配置自己的登录页面
+            default-target-url="/login_success.html" 认证成功需要跳转的URL(重定向)
+            always-use-default-target="true"
+            authentication-failure-url: 认证失败需要跳转的URL(重定向)
+            password-parameter: 密码请求参数名称
+            username-parameter: 用户名请求参数名称
+        -->
+        <security:form-login login-page="/login.html"
+                             default-target-url="/admin/index.html"
+                             always-use-default-target="true"
+                             authentication-failure-url="/login.html"
+                             password-parameter="password"
+                             username-parameter="username"/>
+
+        <!-- 关闭跨站点请求伪造 CSRF -->
+        <security:csrf disabled="true"/>
+
+        <!-- 配置头部分，指定框架页策略(iframe子窗口也可以访问) SAMEORIGIN same origin-->
+        <security:headers>
+            <security:frame-options policy="SAMEORIGIN"/>
+        </security:headers>
+
+        <!-- 配置退出登录 -->
+        <security:logout logout-url="/logout"/>
+
+    </security:http>
+
+
+    <!--######### 配置认证管理器 ##########-->
+    <security:authentication-manager>
+        <!-- 配置认证的提供者 -->
+        <security:authentication-provider>
+            <!-- 配置用户服务 -->
+            <security:user-service>
+                <!-- 配置用户信息： 用户名、密码、角色-->
+                <security:user name="admin" password="123456" authorities="ROLE_ADMIN"/>
+                <security:user name="test" password="123456" authorities="ROLE_ADMIN1"/>
+            </security:user-service>
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+</beans>

@@ -1,5 +1,6 @@
 package com.pinyougou.sellergoods.service.impl;
 
+import com.alibaba.dubbo.config.annotation.Service;
 import com.pinyougou.pojo.Goods;
 import com.pinyougou.mapper.GoodsMapper;
 import java.util.List;
@@ -8,7 +9,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.pinyougou.sellergoods.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 import java.io.Serializable;
@@ -20,14 +20,13 @@ import java.util.Arrays;
  * @date 2018-07-26 23:20:52
  * @version 1.0
  */
-@Service
+@Service(interfaceName = "com.pinyougou.sellergoods.service.GoodsService")
 @Transactional
 public class GoodsServiceImpl implements GoodsService {
-
 	@Autowired
 	private GoodsMapper goodsMapper;
-
 	/** 添加方法 */
+	@Override
 	public void save(Goods goods){
 		try {
 			goodsMapper.insertSelective(goods);
@@ -37,6 +36,7 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	/** 修改方法 */
+	@Override
 	public void update(Goods goods){
 		try {
 			goodsMapper.updateByPrimaryKeySelective(goods);
@@ -46,6 +46,7 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	/** 根据主键id删除 */
+	@Override
 	public void delete(Serializable id){
 		try {
 			goodsMapper.deleteByPrimaryKey(id);
@@ -55,6 +56,7 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	/** 批量删除 */
+	@Override
 	public void deleteAll(Serializable[] ids){
 		try {
 			// 创建示范对象
@@ -71,6 +73,7 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	/** 根据主键id查询 */
+	@Override
 	public Goods findOne(Serializable id){
 		try {
 			return goodsMapper.selectByPrimaryKey(id);
@@ -80,6 +83,7 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	/** 查询全部 */
+	@Override
 	public List<Goods> findAll(){
 		try {
 			return goodsMapper.selectAll();
@@ -89,6 +93,7 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	/** 多条件分页查询 */
+	@Override
 	public List<Goods> findByPage(Goods goods, int page, int rows){
 		try {
 			PageInfo<Goods> pageInfo = PageHelper.startPage(page, rows)
