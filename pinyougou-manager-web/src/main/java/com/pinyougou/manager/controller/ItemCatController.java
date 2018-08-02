@@ -1,5 +1,7 @@
 package com.pinyougou.manager.controller;
 
+import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.dubbo.config.support.Parameter;
 import com.pinyougou.pojo.ItemCat;
 import java.util.List;
 
@@ -17,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/itemCat")
 public class ItemCatController {
 
-	@Autowired(required = false)
+	@Reference(timeout = 10000)
 	private ItemCatService itemCatService;
 
 	/** 多条件分页查询方法 */
@@ -79,6 +81,16 @@ public class ItemCatController {
 			ex.printStackTrace();
 		}
 		return false;
+	}
+
+	/**
+	 * 根据父级id查询商品分类
+	 * @param parentId
+	 * @return
+	 */
+	@GetMapping("/findItemCatByParentId")
+	public List<ItemCat> findItemCatByParentId(Long parentId) {
+		return itemCatService.findItemCatByParentId(parentId);
 	}
 
 }
