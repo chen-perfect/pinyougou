@@ -7,7 +7,7 @@ import java.io.Serializable;
  * ItemCatService 服务接口
  * @author LEE.SIU.WAH
  * @email lixiaohua7@163.com
- * @date 2018-07-26 23:20:52
+ * @date 2018-07-25 16:10:12
  * @version 1.0
  */
 public interface ItemCatService {
@@ -33,10 +33,6 @@ public interface ItemCatService {
 	/** 多条件分页查询 */
 	List<ItemCat> findByPage(ItemCat itemCat, int page, int rows);
 
-	/**
-	 * 根据父级id查询商品分类
-	 * @param parentId
-	 * @return
-	 */
+	/** 根据父级id查询商品分类方法 */
     List<ItemCat> findItemCatByParentId(Long parentId);
 }

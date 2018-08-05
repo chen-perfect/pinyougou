@@ -17,9 +17,13 @@
 		<script src="/js/controller/baseController.js"></script>
 		<script src="/js/controller/itemCatController.js"></script>
 
+	    
 	</head>
 
-	<body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou" ng-controller="itemCatController" ng-init="findItemCatByParentId(0)">
+	<body class="hold-transition skin-red sidebar-mini"
+		  ng-app="pinyougou"
+		  ng-controller="itemCatController"
+		  ng-init="findItemCatByParentId(0);">
 		<!-- .box-body -->
 		<div class="box-header with-border">
 			<h3 class="box-title">商品分类管理</h3>
@@ -27,13 +31,9 @@
 
 		<div class="box-body">
 			<ol class="breadcrumb">
-				<li><a href="#" ng-click="selectList({id:0},1)">顶级分类列表</a></li>
-				<li ng-if="grade > 1"><a href="#"  ng-click="selectList(itemCat_1, 2)">{{entity_1.name}}</a></li>
-				<li ng-if="grade > 2">
-					<a href="#"
-					   ng-click="selectList(itemCat_2, 3)">{{entity_2.name}}</a>
-				</li>
-
+				<li><a href="#" ng-click="selectList({id:0},1);">顶级分类列表</a></li>
+				<li ng-if="grade > 1"><a href="#" ng-click="selectList(entity_1,2);">{{entity_1.name}}</a></li>
+				<li ng-if="grade > 2"><a href="#" ng-click="selectList(entity_2,3);">{{entity_2.name}}</a></li>
 			</ol>
 	
 			<!-- 数据表格 -->
@@ -50,8 +50,9 @@
 							<button type="button" class="btn btn-default" title="删除">
 								<i class="fa fa-trash-o"></i> 删除
 							</button>
-							<button type="button" class="btn btn-default" title="刷新">
-								<i class="fa fa-check" onclick="location.reload();"></i> 刷新
+							<button type="button" class="btn btn-default" title="刷新"
+									onclick="location.reload();">
+								<i class="fa fa-check"></i> 刷新
 							</button>
 	
 						</div>
@@ -80,7 +81,8 @@
 							<td>{{entity.name}}</td>
 							<td>{{entity.typeId}}</td>
 							<td class="text-center">
-								<button type="button" class="btn bg-olive btn-xs" ng-if="grade!=3" ng-click="selectList(entity,grade + 1);">查询下级</button>
+								<button ng-if="grade < 3" type="button" class="btn bg-olive btn-xs"
+										ng-click="selectList(entity, grade + 1);">查询下级</button>
 								<button type="button" class="btn bg-olive btn-xs"
 									data-toggle="modal" data-target="#editModal">修改</button>
 							</td>

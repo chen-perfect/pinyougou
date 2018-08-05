@@ -1,33 +1,38 @@
 package com.pinyougou.manager.controller;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.pojo.TypeTemplate;
-import java.util.List;
-
 import com.pinyougou.sellergoods.service.TypeTemplateService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import pojo.PageResult;
+
 /**
  * TypeTemplateController 控制器类
  * @author LEE.SIU.WAH
  * @email lixiaohua7@163.com
- * @date 2018-07-26 23:20:59
+ * @date 2018-07-25 16:10:16
  * @version 1.0
  */
 @RestController
 @RequestMapping("/typeTemplate")
 public class TypeTemplateController {
 
-	@Autowired(required = false)
+	@Reference(timeout = 10000)
 	private TypeTemplateService typeTemplateService;
 
 	/** 多条件分页查询方法 */
 	@GetMapping("/findByPage")
-	public List<TypeTemplate> save(TypeTemplate typeTemplate,
-			@RequestParam(value="page", defaultValue="1")Integer page,
-			@RequestParam(value="rows", defaultValue="10")Integer rows) {
+	public PageResult findByPage(TypeTemplate typeTemplate,
+								 Integer page, Integer rows) {
 		try {
-			List<TypeTemplate> typeTemplateList = typeTemplateService.findByPage(typeTemplate, page, rows);
-			return typeTemplateList;
+			/** GET请求中文转码 */
+			if (typeTemplate != null && StringUtils
+					.isNoneBlank(typeTemplate.getName())){
+				typeTemplate.setName(new String(typeTemplate
+						.getName().getBytes("ISO8859-1"),"UTF-8"));
+			}
+			return typeTemplateService.findByPage(typeTemplate, page, rows);
 		}catch (Exception ex){
 			ex.printStackTrace();
 		}

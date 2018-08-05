@@ -5,11 +5,13 @@ import pojo.PageResult;
 
 import java.util.List;
 import java.io.Serializable;
+import java.util.Map;
+
 /**
  * BrandService 服务接口
  * @author LEE.SIU.WAH
  * @email lixiaohua7@163.com
- * @date 2018-07-26 23:20:52
+ * @date 2018-07-25 16:10:12
  * @version 1.0
  */
 public interface BrandService {
@@ -35,4 +37,6 @@ public interface BrandService {
 	/** 多条件分页查询 */
 	PageResult findByPage(Brand brand, int page, int rows);
 
+	/** 查询所有的品牌(id与name) */
+    List<Map<String,Object>> findBrandByIdAndName();
 }

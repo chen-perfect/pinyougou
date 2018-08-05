@@ -4,5 +4,27 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.pinyougou.mapper.GoodsMapper">
-
+ <!--多条件查询-->
+	<select id="findAll" resultType="map">
+		SELECT id,goods_name AS goodsName,price,
+audit_status AS auditStatus,category1_id AS category1Id,
+category2_id AS category2Id,category3_id AS category3Id
+FROM `tb_goods`
+	<where>
+		<if test="goods != null">
+			<if test="goods.sellerId != null and goods.sellerId != ''">
+				seller_id = #{goods.sellerId}
+			</if>
+			<!-- 商品名称 -->
+			<if test="goods.goodsName != null and goods.goodsName !=''">
+				and goods_name like CONCAT('%',#{goods.goodsName},'%')
+			</if>
+			<!-- 商品状态 -->
+			<if test="goods.auditStatus != null and goods.auditStatus !=''">
+				and audit_status = #{goods.auditStatus}
+			</if>
+		</if>
+	</where>
+		order by id asc
+	</select>
 </mapper>

@@ -4,5 +4,23 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.pinyougou.mapper.BrandMapper">
+	<!-- 多条件查询品牌 -->
+	<select id="findAll" resultType="Brand">
+		  select * from tb_brand
+		  <where>
+			  <!-- 判断品牌对象是否为空 -->
+			  <if test="brand != null">
+				  <!-- 品牌名称  查询条件不用${}它不会产生?号 -->
+				  <if test="brand.name != null and brand.name !=''">
+					  name like CONCAT('%',#{brand.name},'%')
+				  </if>
+				  <!-- 品牌首字线 -->
+				  <if test="brand.firstChar != null and brand.firstChar !=''">
+					  AND first_char = #{brand.firstChar}
+				  </if>
+			  </if>
+		  </where>
+		  ORDER  by id asc
+	</select>
 
 </mapper>

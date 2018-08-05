@@ -64,7 +64,7 @@
     <!-- 配置加密对象 -->
     <bean id="bCryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 
-    <!-- ############## 配置dubbo服务消费者 ############## --> 
+    <!-- ############## 配置dubbo服务消费者 ############## -->
     <!-- 配置当前应用的名称 -->
     <dubbo:application name="pinyougou-shop-web"/>
     <!-- 配置zookeeper作为注册中心，发现服务地址 -->

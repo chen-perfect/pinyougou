@@ -2,7 +2,17 @@
 <!DOCTYPE mapper
 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
 <mapper namespace="com.pinyougou.mapper.TypeTemplateMapper">
-
+	<!-- 多条件查询类型模版 -->
+	<select id="findAll" resultType="TypeTemplate">
+		select * from tb_type_template
+		<where>
+			<if test="typeTemplate != null">
+				<!-- 类型模版名称 -->
+				<if test="typeTemplate.name != null and typeTemplate.name !=''">
+					name LIKE CONCAT('%',#{typeTemplate.name},'%')
+				</if>
+			</if>
+		</where>
+	</select>
 </mapper>

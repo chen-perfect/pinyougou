@@ -1,23 +1,25 @@
 package com.pinyougou.sellergoods.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
-import com.pinyougou.pojo.ItemCat;
-import com.pinyougou.mapper.ItemCatMapper;
-import java.util.List;
 import com.github.pagehelper.ISelect;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.pinyougou.mapper.ItemCatMapper;
+import com.pinyougou.pojo.ItemCat;
 import com.pinyougou.sellergoods.service.ItemCatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
+
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.List;
+
 /**
  * ItemCatServiceImpl 服务接口实现类
  * @author LEE.SIU.WAH
  * @email lixiaohua7@163.com
- * @date 2018-07-26 23:20:52
+ * @date 2018-07-25 16:10:12
  * @version 1.0
  */
 @Service(interfaceName = "com.pinyougou.sellergoods.service.ItemCatService")
@@ -28,7 +30,6 @@ public class ItemCatServiceImpl implements ItemCatService {
 	private ItemCatMapper itemCatMapper;
 
 	/** 添加方法 */
-	@Override
 	public void save(ItemCat itemCat){
 		try {
 			itemCatMapper.insertSelective(itemCat);
@@ -38,7 +39,6 @@ public class ItemCatServiceImpl implements ItemCatService {
 	}
 
 	/** 修改方法 */
-	@Override
 	public void update(ItemCat itemCat){
 		try {
 			itemCatMapper.updateByPrimaryKeySelective(itemCat);
@@ -48,7 +48,6 @@ public class ItemCatServiceImpl implements ItemCatService {
 	}
 
 	/** 根据主键id删除 */
-	@Override
 	public void delete(Serializable id){
 		try {
 			itemCatMapper.deleteByPrimaryKey(id);
@@ -58,7 +57,6 @@ public class ItemCatServiceImpl implements ItemCatService {
 	}
 
 	/** 批量删除 */
-	@Override
 	public void deleteAll(Serializable[] ids){
 		try {
 			// 创建示范对象
@@ -75,7 +73,6 @@ public class ItemCatServiceImpl implements ItemCatService {
 	}
 
 	/** 根据主键id查询 */
-	@Override
 	public ItemCat findOne(Serializable id){
 		try {
 			return itemCatMapper.selectByPrimaryKey(id);
@@ -85,7 +82,6 @@ public class ItemCatServiceImpl implements ItemCatService {
 	}
 
 	/** 查询全部 */
-	@Override
 	public List<ItemCat> findAll(){
 		try {
 			return itemCatMapper.selectAll();
@@ -95,7 +91,6 @@ public class ItemCatServiceImpl implements ItemCatService {
 	}
 
 	/** 多条件分页查询 */
-	@Override
 	public List<ItemCat> findByPage(ItemCat itemCat, int page, int rows){
 		try {
 			PageInfo<ItemCat> pageInfo = PageHelper.startPage(page, rows)
@@ -111,21 +106,17 @@ public class ItemCatServiceImpl implements ItemCatService {
 		}
 	}
 
-	/**
-	 * 根据父级id查询商品分类
-	 *
-	 * @param parentId
-	 * @return
-	 */
-	@Override
-	public List<ItemCat> findItemCatByParentId(Long parentId) {
+	/** 根据父级id查询商品分类方法 */
+	public List<ItemCat> findItemCatByParentId(Long parentId){
 		try {
+			// SELECT * FROM `tb_item_cat` WHERE parent_id = ?
+			// 创建ItemCat对象封装查询条件，查询条件用等于号
 			ItemCat itemCat = new ItemCat();
 			itemCat.setParentId(parentId);
+			// 判断itemcat对象中哪些属性有值就生成等于号的查询条件
 			return itemCatMapper.select(itemCat);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+		}catch (Exception ex){
+			throw new RuntimeException(ex);
 		}
 	}
 

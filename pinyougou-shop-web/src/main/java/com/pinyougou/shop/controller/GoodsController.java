@@ -3,8 +3,11 @@ package com.pinyougou.shop.controller;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.pojo.Goods;
 import com.pinyougou.sellergoods.service.GoodsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import pojo.PageResult;
 
 import java.util.List;
 
@@ -12,7 +15,7 @@ import java.util.List;
  * GoodsController 控制器类
  * @author LEE.SIU.WAH
  * @email lixiaohua7@163.com
- * @date 2018-07-26 23:20:59
+ * @date 2018-07-25 16:10:16
  * @version 1.0
  */
 @RestController
@@ -24,12 +27,16 @@ public class GoodsController {
 
 	/** 多条件分页查询方法 */
 	@GetMapping("/findByPage")
-	public List<Goods> save(Goods goods,
-			@RequestParam(value="page", defaultValue="1")Integer page,
-			@RequestParam(value="rows", defaultValue="10")Integer rows) {
+	public PageResult findByPage(Goods goods,
+								 Integer page, Integer rows) {
 		try {
-			List<Goods> goodsList = goodsService.findByPage(goods, page, rows);
-			return goodsList;
+			String sellerId = SecurityContextHolder.getContext().getAuthentication().getName();
+			goods.setSellerId(sellerId);
+			if (StringUtils.isNoneBlank(goods.getGoodsName())) {
+				goods.setGoodsName(new String(goods
+						.getGoodsName().getBytes("ISO8859-1"), "UTF-8"));
+			}
+			return goodsService.findByPage(goods, page, rows);
 		}catch (Exception ex){
 			ex.printStackTrace();
 		}
@@ -51,6 +58,11 @@ public class GoodsController {
 	@PostMapping("/save")
 	public boolean save(@RequestBody Goods goods) {
 		try {
+			// 获取登录用户名(商家的id)
+			String sellerId = SecurityContextHolder
+					.getContext().getAuthentication().getName();
+			// 设置商家id
+			goods.setSellerId(sellerId);
 			goodsService.save(goods);
 			return true;
 		}catch (Exception ex){

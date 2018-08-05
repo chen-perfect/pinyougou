@@ -1,18 +1,16 @@
 package com.pinyougou.manager.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.alibaba.dubbo.config.support.Parameter;
 import com.pinyougou.pojo.ItemCat;
-import java.util.List;
-
 import com.pinyougou.sellergoods.service.ItemCatService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 /**
  * ItemCatController 控制器类
  * @author LEE.SIU.WAH
  * @email lixiaohua7@163.com
- * @date 2018-07-26 23:20:59
+ * @date 2018-07-25 16:10:16
  * @version 1.0
  */
 @RestController
@@ -22,14 +20,11 @@ public class ItemCatController {
 	@Reference(timeout = 10000)
 	private ItemCatService itemCatService;
 
-	/** 多条件分页查询方法 */
-	@GetMapping("/findByPage")
-	public List<ItemCat> save(ItemCat itemCat,
-			@RequestParam(value="page", defaultValue="1")Integer page,
-			@RequestParam(value="rows", defaultValue="10")Integer rows) {
+	/** 根据父级id查询商品分类方法 */
+	@GetMapping("/findItemCatByParentId")
+	public List<ItemCat> findItemCatByParentId(Long parentId) {
 		try {
-			List<ItemCat> itemCatList = itemCatService.findByPage(itemCat, page, rows);
-			return itemCatList;
+			return itemCatService.findItemCatByParentId(parentId);
 		}catch (Exception ex){
 			ex.printStackTrace();
 		}
@@ -81,16 +76,6 @@ public class ItemCatController {
 			ex.printStackTrace();
 		}
 		return false;
-	}
-
-	/**
-	 * 根据父级id查询商品分类
-	 * @param parentId
-	 * @return
-	 */
-	@GetMapping("/findItemCatByParentId")
-	public List<ItemCat> findItemCatByParentId(Long parentId) {
-		return itemCatService.findItemCatByParentId(parentId);
 	}
 
 }

@@ -9,22 +9,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @program: pinyougou
- * @description: 显示登录用户名控制器
- * @author: Mr.Chen
- * @create: 2018-07-29 21:57
- **/
+ * 获取登录用户名控制器
+ *
+ * @author lee.siu.wah
+ * @version 1.0
+ * <p>File Created at 2018-07-28<p>
+ */
 @RestController
 public class LoginController {
-    /** 获取当前登录用户名 */
+
+    /** 获取登录用户名 */
     @GetMapping("/login/username")
-    public Map<String,String> loginName() {
-        /** 获取SecurityContext对象 */
+    public Map<String, Object> loginName(){
+
+        /** 获取SecurityContext上下对象 */
         SecurityContext securityContext = SecurityContextHolder.getContext();
-        /** 获取当前登录用户名 */
-        String name = securityContext.getAuthentication().getName();
-        HashMap<String, String> data = new HashMap<>();
-        data.put("loginName",name);
+        /** 获取登录用户名 */
+        String loginName = securityContext.getAuthentication().getName();
+        Map<String, Object> data = new HashMap<>();
+        data.put("loginName", loginName);
         return data;
     }
 }

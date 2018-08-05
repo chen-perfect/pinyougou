@@ -1,26 +1,26 @@
 package com.pinyougou.sellergoods.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
-import com.pinyougou.pojo.Seller;
-import com.pinyougou.mapper.SellerMapper;
-
-import java.util.Date;
-import java.util.List;
 import com.github.pagehelper.ISelect;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.pinyougou.mapper.SellerMapper;
+import com.pinyougou.pojo.Seller;
 import com.pinyougou.sellergoods.service.SellerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import pojo.PageResult;
 import tk.mybatis.mapper.entity.Example;
+
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 /**
  * SellerServiceImpl 服务接口实现类
  * @author LEE.SIU.WAH
  * @email lixiaohua7@163.com
- * @date 2018-07-26 23:20:52
+ * @date 2018-07-25 16:10:12
  * @version 1.0
  */
 @Service(interfaceName = "com.pinyougou.sellergoods.service.SellerService")
@@ -31,10 +31,11 @@ public class SellerServiceImpl implements SellerService {
 	private SellerMapper sellerMapper;
 
 	/** 添加方法 */
-	@Override
 	public void save(Seller seller){
 		try {
+			// 设置状态码
 			seller.setStatus("0");
+			// 设置申请时间
 			seller.setCreateTime(new Date());
 			sellerMapper.insertSelective(seller);
 		}catch (Exception ex){
@@ -43,7 +44,6 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	/** 修改方法 */
-	@Override
 	public void update(Seller seller){
 		try {
 			sellerMapper.updateByPrimaryKeySelective(seller);
@@ -53,7 +53,6 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	/** 根据主键id删除 */
-	@Override
 	public void delete(Serializable id){
 		try {
 			sellerMapper.deleteByPrimaryKey(id);
@@ -63,7 +62,6 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	/** 批量删除 */
-	@Override
 	public void deleteAll(Serializable[] ids){
 		try {
 			// 创建示范对象
@@ -80,7 +78,6 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	/** 根据主键id查询 */
-	@Override
 	public Seller findOne(Serializable id){
 		try {
 			return sellerMapper.selectByPrimaryKey(id);
@@ -90,7 +87,6 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	/** 查询全部 */
-	@Override
 	public List<Seller> findAll(){
 		try {
 			return sellerMapper.selectAll();
@@ -100,7 +96,6 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	/** 多条件分页查询 */
-	@Override
 	public PageResult findByPage(Seller seller, int page, int rows){
 		try {
 			PageInfo<Seller> pageInfo = PageHelper.startPage(page, rows)
@@ -110,40 +105,23 @@ public class SellerServiceImpl implements SellerService {
 						sellerMapper.findAll(seller);
 					}
 				});
-			PageResult pageResult = new PageResult();
-			pageResult.setTotal(pageInfo.getTotal());
-			pageResult.setRows(pageInfo.getList());
-			return pageResult;
+			return new PageResult(pageInfo.getTotal(), pageInfo.getList());
 		}catch (Exception ex){
 			throw new RuntimeException(ex);
 		}
 	}
 
-	@Override
-	public void updateStatus(String sellerId, String status) {
+	/**  审核商家(修改状态) */
+	public void updateStatus(String sellerId, String status){
 		try {
+			// update tb_seller set status = ? where seller_id = ?
 			Seller seller = new Seller();
 			seller.setSellerId(sellerId);
 			seller.setStatus(status);
 			sellerMapper.updateByPrimaryKeySelective(seller);
-		} catch (Exception e) {
-			e.printStackTrace();
+		}catch (Exception ex){
+			throw new RuntimeException(ex);
 		}
-	}
-
-	/**
-	 * 根据登录名查询商家
-	 *
-	 * @param username
-	 */
-	@Override
-	public Seller findName(String username) {
-		try {
-			return sellerMapper.selectByPrimaryKey(username);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 }

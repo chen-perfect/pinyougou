@@ -18,23 +18,6 @@ app.controller('sellerController', function($scope, $controller, baseService){
             });
     };
 
-    /** 添加或修改 */
-    $scope.saveOrUpdate = function(){
-        var url = "save";
-        if ($scope.entity.id){
-            url = "update";
-        }
-        /** 发送post请求 */
-        baseService.sendPost("/seller/" + url, $scope.entity)
-            .then(function(response){
-                if (response.data){
-                    /** 重新加载数据 */
-                    $scope.reload();
-                }else{
-                    alert("操作失败！");
-                }
-            });
-    };
 
     /** 显示修改 */
     $scope.show = function(entity){
@@ -42,34 +25,20 @@ app.controller('sellerController', function($scope, $controller, baseService){
        $scope.entity = JSON.parse(JSON.stringify(entity));
     };
 
-    /** 批量删除 */
-    $scope.delete = function(){
-        if ($scope.ids.length > 0){
-            baseService.deleteById("/seller/delete", $scope.ids)
-                .then(function(response){
-                    if (response.data){
-                        /** 重新加载数据 */
-                        $scope.reload();
-                    }else{
-                        alert("删除失败！");
-                    }
-                });
-        }else{
-            alert("请选择要删除的记录！");
-        }
-    };
-    /** 修改商家状态 */
-    $scope.updateStatus = function(sellerId,status) {
+
+    /** 审核商家 */
+    $scope.updateStatus = function(sellerId, status){
+
         baseService.sendGet("/seller/updateStatus?sellerId="
-            + sellerId + '&status=' + status)
-            .then(function (response) {
-                if (response.data) {
+            + sellerId + "&status=" + status)
+            .then(function(response){
+                if (response.data){
                     /** 重新加载数据 */
                     $scope.reload();
-                } else {
-                    alert("操作失败！");
+                }else{
+                    alert("删除失败！");
                 }
             });
-        };
 
-    });
+    };
+});

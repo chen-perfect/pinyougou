@@ -3,13 +3,13 @@ package com.pinyougou.sellergoods.service;
 import com.pinyougou.pojo.Seller;
 import pojo.PageResult;
 
-import java.util.List;
 import java.io.Serializable;
+import java.util.List;
 /**
  * SellerService 服务接口
  * @author LEE.SIU.WAH
  * @email lixiaohua7@163.com
- * @date 2018-07-26 23:20:52
+ * @date 2018-07-25 16:10:12
  * @version 1.0
  */
 public interface SellerService {
@@ -34,8 +34,6 @@ public interface SellerService {
 
 	/** 多条件分页查询 */
 	PageResult findByPage(Seller seller, int page, int rows);
-
+	/**  审核商家(修改状态) */
 	void updateStatus(String sellerId, String status);
-	/** 根据登录名查询商家 */
-	Seller findName(String username);
 }

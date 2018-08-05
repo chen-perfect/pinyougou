@@ -2,16 +2,18 @@ package com.pinyougou.manager.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.pojo.Specification;
+import com.pinyougou.pojo.SpecificationOption;
 import com.pinyougou.sellergoods.service.SpecificationService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import pojo.PageResult;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * SpecificationController 控制器类
- * @author LEE.SIU.WAH
- * @email lixiaohua7@163.com
- * @date 2018-07-26 23:20:59
+ * @date 2018-07-25 16:10:16
  * @version 1.0
  */
 @RestController
@@ -24,26 +26,26 @@ public class SpecificationController {
 	/** 多条件分页查询方法 */
 	@GetMapping("/findByPage")
 	public PageResult findByPage(Specification specification,
-								 Integer page, Integer rows) throws Exception {
-		/**GET请求中文转码 */
-		if (specification != null && StringUtils.isNoneBlank(specification.getSpecName())) {
-			specification.setSpecName(new String(specification
-					.getSpecName().getBytes("ISO8859-1"),"UTF-8"));
-		}
+								 Integer page, Integer rows) {
 		try {
-			PageResult specificationList = specificationService.findByPage(specification, page, rows);
-			return specificationList;
+			/** GET请求中文转码 */
+			if (specification != null && StringUtils
+					.isNoneBlank(specification.getSpecName())){
+				specification.setSpecName(new String(specification
+						.getSpecName().getBytes("ISO8859-1"),"UTF-8"));
+			}
+			return specificationService.findByPage(specification, page, rows);
 		}catch (Exception ex){
 			ex.printStackTrace();
 		}
 		return null;
 	}
 
-	/** 根据主键id查询方法 */
+	/** 根据规格id查询规格选项 */
 	@GetMapping("/findOne")
-	public Specification findOne(Long id) {
+	public List<SpecificationOption> findOne(Long id) {
 		try {
-			return specificationService.findOne(id);
+			return specificationService.findSpecOptionBySpecId(id);
 		}catch (Exception ex){
 			ex.printStackTrace();
 		}
@@ -84,6 +86,12 @@ public class SpecificationController {
 			ex.printStackTrace();
 		}
 		return false;
+	}
+
+	/** 查询规格数据 */
+	@GetMapping("/findSpecList")
+	public List<Map<String,Object>> findSpecList(){
+		return specificationService.findSpecByIdAndName();
 	}
 
 }

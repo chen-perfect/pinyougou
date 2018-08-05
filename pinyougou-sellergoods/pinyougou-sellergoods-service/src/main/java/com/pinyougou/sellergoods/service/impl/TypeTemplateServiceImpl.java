@@ -1,31 +1,40 @@
 package com.pinyougou.sellergoods.service.impl;
 
-import com.pinyougou.pojo.TypeTemplate;
-import com.pinyougou.mapper.TypeTemplateMapper;
-import java.util.List;
+import com.alibaba.dubbo.config.annotation.Service;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.ISelect;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.pinyougou.mapper.SpecificationOptionMapper;
+import com.pinyougou.mapper.TypeTemplateMapper;
+import com.pinyougou.pojo.SpecificationOption;
+import com.pinyougou.pojo.TypeTemplate;
 import com.pinyougou.sellergoods.service.TypeTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pojo.PageResult;
 import tk.mybatis.mapper.entity.Example;
+
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 /**
  * TypeTemplateServiceImpl 服务接口实现类
  * @author LEE.SIU.WAH
  * @email lixiaohua7@163.com
- * @date 2018-07-26 23:20:52
+ * @date 2018-07-25 16:10:12
  * @version 1.0
  */
-@Service
+@Service(interfaceName = "com.pinyougou.sellergoods.service.TypeTemplateService")
 @Transactional
 public class TypeTemplateServiceImpl implements TypeTemplateService {
 
 	@Autowired
 	private TypeTemplateMapper typeTemplateMapper;
+	@Autowired
+	private SpecificationOptionMapper specificationOptionMapper;
 
 	/** 添加方法 */
 	public void save(TypeTemplate typeTemplate){
@@ -89,16 +98,43 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
 	}
 
 	/** 多条件分页查询 */
-	public List<TypeTemplate> findByPage(TypeTemplate typeTemplate, int page, int rows){
+	public PageResult findByPage(TypeTemplate typeTemplate, int page, int rows){
 		try {
 			PageInfo<TypeTemplate> pageInfo = PageHelper.startPage(page, rows)
 				.doSelectPageInfo(new ISelect() {
 					@Override
 					public void doSelect() {
-						typeTemplateMapper.selectAll();
+						typeTemplateMapper.findAll(typeTemplate);
 					}
 				});
-			return pageInfo.getList();
+			return new PageResult(pageInfo.getTotal(), pageInfo.getList());
+		}catch (Exception ex){
+			throw new RuntimeException(ex);
+		}
+	}
+
+	/** 根据类型模版id查询规格及规格选项 */
+	public List<Map> findSpecByTemplateId(Long id){
+		try {
+			// 根据id查询类型模版对象
+			TypeTemplate typeTemplate = findOne(id);
+			//spec_ids [{"id":27,"text":"网络"},{"id":32,"text":"机身内存"}]
+			// 把spec_ids 转化成List<Map>
+			List<Map> specList = JSON.parseArray(typeTemplate.getSpecIds(), Map.class);
+			// 迭代
+			for (Map map : specList){
+				// 取id
+				Long specId = Long.valueOf(map.get("id").toString());
+				// select * from tb_specification_option where spec_id = ?
+				// 创建规格选项对象封装查询条件
+				SpecificationOption so = new SpecificationOption();
+				so.setSpecId(specId);
+				List<SpecificationOption> soList = specificationOptionMapper.select(so);
+
+				map.put("options", soList);
+			}
+			return specList;
+
 		}catch (Exception ex){
 			throw new RuntimeException(ex);
 		}

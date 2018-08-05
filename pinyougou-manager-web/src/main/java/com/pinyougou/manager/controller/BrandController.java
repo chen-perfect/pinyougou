@@ -2,16 +2,19 @@ package com.pinyougou.manager.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.pojo.Brand;
-import java.util.List;
-
 import com.pinyougou.sellergoods.service.BrandService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import pojo.PageResult;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * BrandController 控制器类
  * @author LEE.SIU.WAH
- * @date 2018-07-26 23:20:59
+ * @email lixiaohua7@163.com
+ * @date 2018-07-25 16:10:16
  * @version 1.0
  */
 @RestController
@@ -20,19 +23,23 @@ public class BrandController {
 
 	@Reference(timeout = 10000)
 	private BrandService brandService;
+
 	/** 查询全部的品牌 */
 	@GetMapping("/findAll")
 	public List<Brand> findAll(){
 		return brandService.findAll();
 	}
+
 	/** 多条件分页查询方法 */
 	@GetMapping("/findByPage")
-	public PageResult save(Brand brand,
-			@RequestParam(value="page")Integer page,
-			@RequestParam(value="rows")Integer rows) {
+	public PageResult findByPage(Brand brand, Integer page, Integer rows) {
 		try {
-			PageResult pageResult = brandService.findByPage(brand, page, rows);
-			return pageResult;
+			// GET请求中文转码
+			if (brand != null && StringUtils.isNoneBlank(brand.getName())){
+				brand.setName(new String(brand.getName().getBytes("ISO-8859-1"), "UTF-8"));
+			}
+			// {'rows' : [{},{}], 'total' : 100}
+			return brandService.findByPage(brand, page, rows);
 		}catch (Exception ex){
 			ex.printStackTrace();
 		}
@@ -84,6 +91,12 @@ public class BrandController {
 			ex.printStackTrace();
 		}
 		return false;
+	}
+
+	/** 查询所有的品牌 */
+	@GetMapping("/findBrandList")
+	public List<Map<String, Object>> findBrandList(){
+		return brandService.findBrandByIdAndName();
 	}
 
 }

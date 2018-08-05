@@ -1,13 +1,13 @@
 package com.pinyougou.sellergoods.service;
 
 import com.pinyougou.pojo.Goods;
+import pojo.PageResult;
+
 import java.util.List;
 import java.io.Serializable;
 /**
  * GoodsService 服务接口
- * @author LEE.SIU.WAH
- * @email lixiaohua7@163.com
- * @date 2018-07-26 23:20:52
+ * @date 2018-07-27 00:08:48
  * @version 1.0
  */
 public interface GoodsService {
@@ -31,6 +31,6 @@ public interface GoodsService {
 	List<Goods> findAll();
 
 	/** 多条件分页查询 */
-	List<Goods> findByPage(Goods goods, int page, int rows);
+	PageResult findByPage(Goods goods, int page, int rows);
 
 }

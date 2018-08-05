@@ -1,33 +1,33 @@
 package com.pinyougou.manager.controller;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.pojo.Goods;
-import java.util.List;
-
 import com.pinyougou.sellergoods.service.GoodsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pojo.PageResult;
+
+import java.util.List;
 /**
  * GoodsController 控制器类
  * @author LEE.SIU.WAH
  * @email lixiaohua7@163.com
- * @date 2018-07-26 23:20:59
+ * @date 2018-07-25 16:10:16
  * @version 1.0
  */
 @RestController
 @RequestMapping("/goods")
 public class GoodsController {
 
-	@Autowired(required = false)
+	@Reference(timeout = 10000)
 	private GoodsService goodsService;
 
 	/** 多条件分页查询方法 */
 	@GetMapping("/findByPage")
-	public List<Goods> save(Goods goods,
-			@RequestParam(value="page", defaultValue="1")Integer page,
-			@RequestParam(value="rows", defaultValue="10")Integer rows) {
+	public PageResult save(Goods goods,
+						   @RequestParam(value="page", defaultValue="1")Integer page,
+						   @RequestParam(value="rows", defaultValue="10")Integer rows) {
 		try {
-			List<Goods> goodsList = goodsService.findByPage(goods, page, rows);
-			return goodsList;
+			return goodsService.findByPage(goods, page, rows);
 		}catch (Exception ex){
 			ex.printStackTrace();
 		}

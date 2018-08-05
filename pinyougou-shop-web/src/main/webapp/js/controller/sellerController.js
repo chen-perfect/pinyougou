@@ -7,6 +7,7 @@ app.controller('sellerController', function($scope, $controller, baseService){
 
     /** 添加商家 */
     $scope.saveOrUpdate = function(){
+
         /** 发送post请求 */
         baseService.sendPost("/seller/save", $scope.seller)
             .then(function(response){
@@ -18,6 +19,16 @@ app.controller('sellerController', function($scope, $controller, baseService){
                 }
             });
     };
+
+
+
+
+
+
+
+
+
+
     /** 查询条件对象 */
     $scope.searchEntity = {};
     /** 分页查询(查询条件) */

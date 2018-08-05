@@ -12,10 +12,12 @@
     <script src="/plugins/jQuery/jquery-2.2.3.min.js"></script>
     <script src="/plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="/plugins/adminLTE/js/app.min.js"></script>
+
     <script src="/plugins/angularjs/angular.min.js"></script>
     <script src="/js/base.js"></script>
     <script src="/js/service/baseService.js"></script>
     <script src="/js/controller/indexController.js"></script>
+    
     <script type="text/javascript">   
 		 function setIFrameHeight(){
 			 $("#iframe").height($(".content-wrapper").height() - 5);
@@ -24,7 +26,10 @@
  
 </head>
 
-<body class="hold-transition skin-green sidebar-mini" ng-app ="pinyougou" ng-controller="indexcontroller" ng-init="showLoginName()">
+<body class="hold-transition skin-green sidebar-mini"
+      ng-app="pinyougou"
+      ng-controller="indexController"
+      ng-init="showLoginName();">
 
     <div class="wrapper">
 
@@ -255,7 +260,7 @@
                                     <img src="/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                                     <p>
-                                       {{loginName}}
+                                        {{loginName}}
                                         <small>最后登录 11:20AM</small>
                                     </p>
                                 </li>
@@ -396,7 +401,6 @@
         <div class="content-wrapper">
 			<iframe width="100%" id="iframe" name="iframe" onload="setIFrameHeight()" 
 					frameborder="0" src="home.html"></iframe>
- 
         </div>
         <!-- 内容区域 /-->
 

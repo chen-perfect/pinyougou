@@ -14,11 +14,12 @@
 	<!-- 分页模块开始 -->
 	<link rel="stylesheet" href="/plugins/angularjs/pagination.css"/>
 	<script src="/plugins/angularjs/pagination.js"></script>
+	<!-- 分页模块结束 -->
+
 	<script src="/js/base-pagination.js"></script>
 	<script src="/js/service/baseService.js"></script>
 	<script src="/js/controller/baseController.js"></script>
 	<script src="/js/controller/brandController.js"></script>
-	<!-- 分页模块结束 -->
 
 </head>
 <body class="hold-transition skin-red sidebar-mini"
@@ -92,8 +93,8 @@
 				<tbody>
 					<tr ng-repeat="entity in dataList">
 						<td><input type="checkbox"
-								   ng-checked="ck"
-								   ng-click="updateSelection($event, entity.id);"></td>
+								   ng-checked="checkedArr[$index]"
+								   ng-click="updateSelection($event, entity.id, $index);"></td>
 						<td>{{entity.id}}</td>
 						<td>{{entity.name}}</td>
 						<td>{{entity.firstChar}}</td>

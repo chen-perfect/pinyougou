@@ -1,12 +1,13 @@
 package com.pinyougou.manager.controller;
 
+import com.alibaba.dubbo.config.annotation.Reference;
+import com.pinyougou.content.service.ContentService;
 import com.pinyougou.pojo.Content;
+import org.springframework.web.bind.annotation.*;
+import pojo.PageResult;
 
 import java.util.List;
 
-import com.pinyougou.sellergoods.service.ContentService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 /**
  * ContentController 控制器类
  * @author LEE.SIU.WAH
@@ -18,17 +19,20 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/content")
 public class ContentController {
 
-	@Autowired(required = false)
+	@Reference(timeout = 10000)
 	private ContentService contentService;
-
+	/** 查询全部方法 */
+	@GetMapping("/findAll")
+	public List<Content> findAll() {
+		return contentService.findAll();
+	}
 	/** 多条件分页查询方法 */
 	@GetMapping("/findByPage")
-	public List<Content> save(Content content,
-			@RequestParam(value="page", defaultValue="1")Integer page,
-			@RequestParam(value="rows", defaultValue="10")Integer rows) {
+	public PageResult save(Content content,
+						   Integer page,
+						   Integer rows) {
 		try {
-			List<Content> contentList = contentService.findByPage(content, page, rows);
-			return contentList;
+			return contentService.findByPage(content, page, rows);
 		}catch (Exception ex){
 			ex.printStackTrace();
 		}
